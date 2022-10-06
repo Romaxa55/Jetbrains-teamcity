@@ -7,6 +7,20 @@
 
 https://app.vagrantup.com/nixos/boxes/nixos-18.03-x86_64
 ```bash
+vagrant plugin install vagrant-nixos-plugin
 vagrant init nixos/nixos-18.03-x86_64
 vagrant up
+```
+
+
+Если, посыпались ошибки
+
+Solution:
+
+Open VirtualBox and shut down every VM running
+Go to System Preferences > Security & Privacy Then hit the "Allow" button to let Oracle (VirtualBox) load.
+Restart VirtualBox
+
+```bash
+sudo "/Library/Application Support/VirtualBox/LaunchDaemons/VirtualBoxStartup.sh" restart
 ```

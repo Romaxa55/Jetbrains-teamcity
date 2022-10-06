@@ -1,2 +1,9 @@
 /.vagrant/
 .idea
+.DS_Store
+/*.box
+/.vagrant
+/iso
+/output-virtualbox-iso
+/packer_cache
+/vendor

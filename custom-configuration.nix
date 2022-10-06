@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, options, lib, pkgs, ... }:
 
 {
     imports =
@@ -10,12 +10,23 @@
     ./vagrant.nix
     ];
 
-  virtualisation.docker.enable = true;
-  users.users.vagrant.extraGroups = [ "docker" ];
+    virtualisation.docker.enable = true;
+    users.users.vagrant.extraGroups = [ "docker" ];
 
-   config.docker-containers = {
-    hello-world = {
-      image = "hello-world:latest";
-    };
-  };
+#    containerImage = pkgs.dockerTools.buildLayeredImage
+#      {
+#        name = "thewagner.net";
+#        contents = [ pkgs.python3 vag ];
+#        config = {
+#          Cmd = [
+#            "${pkgs.python3}/bin/python" "-m" "http.server" 8000
+#            "--directory" "${htmlPages}"
+#          ];
+#          ExposedPorts = {
+#            "8000/tcp" = { };
+#          };
+#        };
+#      };
+
 }
+

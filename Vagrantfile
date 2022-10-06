@@ -1,7 +1,7 @@
 Vagrant.configure("2") do |config|
   config.vm.synced_folder ".", "/vagrant", disabled: false
   config.vm.box = "romaxa55/NixOS"
-  config.vm.box_version = "22.05.3441"
+  config.vm.box_version = "22.05"
   config.vm.network "private_network", ip: "192.168.56.4"
   # set hostname
   config.vm.hostname = "nixy"

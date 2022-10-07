@@ -6,4 +6,4 @@
 /iso
 /output-virtualbox-iso
 /packer_cache
-/vendor
+/vendor!/nixbox/*.box

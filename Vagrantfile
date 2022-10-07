@@ -14,10 +14,10 @@ Vagrant.configure("2") do |config|
     }
     $script = <<-SCRIPT
     echo I am provisioning... &&
-    cd $HOME \
-    git --version \
-    git clone https://github.com/Romaxa55/Jetbrains-teamcity.git \
-    cd Jetbrains-teamcity/teamcity \
+    cd $HOME
+    git --version
+    git clone https://github.com/Romaxa55/Jetbrains-teamcity.git
+    cd Jetbrains-teamcity/teamcity
     docker compose up -d
     SCRIPT
   config.vm.provision "shell", inline: $script   #VirtualBox

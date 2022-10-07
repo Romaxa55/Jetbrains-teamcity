@@ -6,7 +6,9 @@ Vagrant.configure("2") do |config|
   # set hostname
   config.vm.hostname = "nixy"
   # Через плагин прогоняем наш кастомный конфиг для nixOS
-  config.vm.provision :nixos, run: 'always', path: "custom-configuration.nix", include:true, verbose: true
+#   config.vm.provision :nixos, run: 'always', path: "custom-configuration.nix", include:true, verbose: true
+  config.vm.provision "file", source: "custom-configuration.nix", destination: "custom-configuration.nix"
+  config.vm.provision "shell", inline: "nix-build custom-configuration.nix && chmod +x /bin/hello && /bin/hello"
    #VirtualBox
     config.vm.provider :virtualbox do |vb|
           # Размер RAM памяти

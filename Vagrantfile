@@ -5,11 +5,19 @@ Vagrant.configure("2") do |config|
   config.vm.network "private_network", ip: "192.168.56.4"
   # set hostname
   config.vm.hostname = "nixy"
+  config.vm.provision :nixos,
+    run: 'always',
+    expression: {
+      environment: {
+        systemPackages: [ :git ]
+      }
+    }
     $script = <<-SCRIPT
-    echo I am provisioning...
-    nix-shell -p git
-    git clone https://github.com/Romaxa55/Jetbrains-teamcity.git
-    cd Jetbrains-teamcity/teamcity
+    echo I am provisioning... &&
+    cd $HOME
+    git --version
+    git clone https://github.com/Romaxa55/Jetbrains-teamcity.git &&
+    cd Jetbrains-teamcity/teamcity &&
     docker compose up
     SCRIPT
   config.vm.provision "shell", inline: $script   #VirtualBox

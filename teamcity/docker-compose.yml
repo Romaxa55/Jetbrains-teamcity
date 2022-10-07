@@ -6,10 +6,11 @@ services:
       - "8111:8111"
     volumes:
       - datadir:/data/teamcity_server/datadir
-      - logs:/opt/teamcity/logs
+      - teamcity-server-logs:/opt/teamcity/logs
   agent:
     image: jetbrains/teamcity-agent:latest
     volumes:
-      - agent_conf:/data/teamcity_agent/conf
+      - agents:/data/agent-1/conf
+      - agents:/data/agent-2/conf
     environment:
       - SERVER_URL=http://server:8111

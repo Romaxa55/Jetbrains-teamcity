@@ -23,13 +23,6 @@ services:
     ports:
       - 5433:5432
 
-  nginx:
-    image: nginx:1.19
-    ports:
-      - 8222:8222
-    volumes:
-      - ./nginx:/etc/nginx/conf.d
-
   teamcity:
     image: jetbrains/teamcity-server:${TEAMCITY_VERSION}
     ports:

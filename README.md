@@ -16,17 +16,7 @@ vagrant init nixos/nixos-18.03-x86_64
 vagrant up
 ```
 
-```bash
-mkdir -p teamcity
-mkdir teamcity/data
-mkdir teamcity/logs
-mkdir teamcity/agent
-docker pull jetbrains/teamcity-server
-docker run -it -d --name server -u root -v /teamcity/data:/data/teamcity_server/datadir -v /teamcity/logs:/opt/teamcity/logs -p 8111:8111 jetbrains/teamcity-server
-```
-
-
-
+P.S. Это на тот случай, если VirtualBox работает не стабильно и валится с ошибкой
 ```bash
 sudo "/Library/Application Support/VirtualBox/LaunchDaemons/VirtualBoxStartup.sh" restart
 ```

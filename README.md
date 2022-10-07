@@ -16,7 +16,46 @@ vagrant plugin install vagrant-nixos-plugin
 vagrant up
 ```
 
-Должны получить
+Должны получить как докер подтягивает образы из реджистри, см кусок docker-composer.yaml 
+```yaml
+  db:
+    image: postgres
+    ports:
+      - 5433:5432
+    ... 
+  # необходим для проксирования по tls
+  nginx:
+    image: nginx:1.19
+    ports:
+      - 8222:8222
+    ...
+  # основной сервер 
+  teamcity:
+    image: jetbrains/teamcity-server:${TEAMCITY_VERSION}
+    ...
+    ports:
+      - 8111:8111
+  # отдельная нода teamcity-server
+  node1:
+    image: jetbrains/teamcity-server:${TEAMCITY_VERSION}
+    ...
+    ports:
+      - 8112:8111
+   ...
+# Агент 1
+  teamcity-agent1:
+    image: jetbrains/teamcity-agent:${TEAMCITY_VERSION}
+    environment:
+      SERVER_URL: http://nginx:8222
+    ...
+# Агент 2
+  teamcity-agent2:
+    image: jetbrains/teamcity-agent:${TEAMCITY_VERSION}
+    environment:
+      SERVER_URL: http://nginx:8222
+   ...
+
+```
 
 ```bash
 % vagrant up     
@@ -72,7 +111,7 @@ Bringing machine 'default' up with 'virtualbox' provider...
     default: c39aa91943e9 Pulling fs layer
  ...
 ```
-
+#ToDo Тут будут скрины
 
 P.S. Это на тот случай, если VirtualBox работает не стабильно и валится с ошибкой
 ```bash

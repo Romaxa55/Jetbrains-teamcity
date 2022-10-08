@@ -1,7 +1,0 @@
-users:
-  - name: terraform
-    groups: sudo
-    shell: /bin/bash
-    sudo: ['ALL=(ALL) NOPASSWD:ALL']
-    ssh_authorized_keys:
-      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHxHqIcsG1Ay1fXADfHJ4xUHQUn0YHCRPrXzUJ12bexz 19515436@cab-wsm-0014962

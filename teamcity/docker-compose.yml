@@ -13,8 +13,8 @@ services:
   db:
     image: postgres:latest
     volumes:
-      - "pg_data:/var/lib/postgresql/data"
-      - "pg_backup:/backups"
+      - "./pg_data:/var/lib/postgresql/data"
+      - "./pg_backup:/backups"
     restart: always
     environment:
       - POSTGRES_PASSWORD=teamcity_password

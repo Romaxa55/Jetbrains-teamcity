@@ -64,7 +64,7 @@ services:
         max-file: "5"
 
   teamcity-agent-1:
-    image: jetbrains/teamcity-agent:${TEAMCITY_VERSION}-linux-sud
+    image: jetbrains/teamcity-agent:${TEAMCITY_VERSION}-linux-sudo
     container_name: teamcity-agent-1
     privileged: true
     env_file: .env

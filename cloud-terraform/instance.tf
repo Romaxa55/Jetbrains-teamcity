@@ -44,7 +44,6 @@ resource "yandex_compute_instance" "workinstance" {
       "sudo usermod -a -G docker ubuntu && sudo systemctl enable docker && sudo service docker restart",
       "newgrp docker",
       "docker network create web",
-      "docker-compose -f Jetbrains-teamcity/teamcity/docker-compose.yml up -d",
     ]
   }
 }

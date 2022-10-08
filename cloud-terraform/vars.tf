@@ -42,7 +42,7 @@ variable "user" {
 
 variable "boot-disk-size" {
   type        = string
-  default     = "20"
+  default     = "50"
   description = "Disk size"
 }
 

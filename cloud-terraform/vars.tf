@@ -105,17 +105,17 @@ variable "static" {
   description = "Static IP addres in your network YC"
 }
 */
-
+/*
 variable "dns-zone" {
   type        = string
-  default     = "ru-central1-b"
+  default     = ""
   description = "Domain zone"
 }
-
-
+*/
+/*
 variable "dns-name" {
   type        = string
-  default     = "teamcity"
+  default     = ""
   description = "Name for resource yandex_dns_zone"
 }
-
+*/

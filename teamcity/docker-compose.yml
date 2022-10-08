@@ -36,7 +36,6 @@ services:
     healthcheck:
       test: "${DOCKER_HEALTHCHECK:-curl http://localhost:8111}"
       interval: 30s
-      start_period: 30s
       timeout: 10s
       retries: 5
     environment:

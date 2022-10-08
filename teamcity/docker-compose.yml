@@ -1,27 +1,41 @@
-version: '3.4'
-
-
-# Default ${TEAMCITY_VERSION} is defined in .env file
-
-# ./buildserver_pgdata - Posgres DB data
-# ./data_dir - TeamCity data directory
-# ./teamcity-server-logs - logs of primary TeamCity server
-# ./agents/agent-1/conf - configuration directory for the first build agent
-# ./agents/agent-1/conf - configuration directory for the second build agent
+version: '3'
 
 services:
-  db:
-    image: postgres:latest
-    container_name: postgres
+  server:
+    image: jetbrains/teamcity-server:latest
+    networks:
+      - web
+      - default
     volumes:
-      - "./pg_data:/var/lib/postgresql/data"
-      - "./pg_backup:/backups"
-    restart: always
-    environment:
-      - POSTGRES_PASSWORD=teamcity_password
-      - POSTGRES_USER=teamcity_user
-      - POSTGRES_DB=teamcity_db
-      - PG_DATA=/var/lib/postgresql/data
+      - "/opt/teamcity/data:/data/teamcity_server/datadir"
+      - "/opt/teamcity/logs:/opt/teamcity/logs"
+    hostname: ${VIRTUAL_HOST}
+    ports:
+      - "8111"
+    depends_on:
+      - postgres
+    env_file: .env
+    labels:
+      - "traefik.enable=true"
+      - "traefik.backend=server"
+      - "traefik.frontend.rule=Host:${VIRTUAL_HOST}"
+      - "traefik.docker.network=web"
+      - "traefik.port=8111"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  agent:
+    build: ./agents/python-node-yarn
+    env_file: .env
+    depends_on:
+      - redis
+    #     if you need docker inside the agent
+    #     (http://jpetazzo.github.io/2015/09/03/do-not-use-docker-in-docker-for-ci/)
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
     labels:
       - "traefik.enable=false"
     logging:
@@ -30,100 +44,65 @@ services:
         max-size: "10m"
         max-file: "5"
 
-  teamcity:
-    image: jetbrains/teamcity-server:${TEAMCITY_VERSION}
-    container_name: teamcity
-    hostname: ${VIRTUAL_HOST}
-    networks:
-      - default
-      - web
-    ports:
-        - "8111"
+  postgres:
+    build: ./postgres
     volumes:
-      - ./data_dir:/data/teamcity_server/datadir
-      - ./teamcity-server-logs:/opt/teamcity/logs
-    depends_on:
-      - db
-    restart: unless-stopped
+      - "/opt/teamcity/pg_data:/var/lib/postgresql/data"
+      - "/opt/teamcity/pg_backup:/backups"
     env_file: .env
-    healthcheck:
-      test: curl --fail http://localhost:8111 || exit 1
-      interval: 60s
-      retries: 5
-      timeout: 10s
-      start_period: 20s
-    environment:
-      TEAMCITY_SERVER_MEM_OPTS: "-Xmx512m"
+    labels:
+      - "traefik.enable=false"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
 
   redis:
     image: redis:3.2
+    labels:
+      - "traefik.enable=false"
     logging:
       driver: json-file
       options:
         max-size: "10m"
         max-file: "5"
 
-  teamcity-agent-1:
-    image: jetbrains/teamcity-agent:${TEAMCITY_VERSION}-linux-sudo
-    container_name: teamcity-agent-1
-    privileged: true
-    env_file: .env
-    volumes:
-      - ./agents/agent-1/conf:/data/teamcity_agent/conf
-    environment:
-      - DOCKER_IN_DOCKER=start
-    depends_on:
-      - redis
-    healthcheck:
-      test: curl --fail http://localhost:9090 || exit 1
-      interval: 60s
-      retries: 5
-      timeout: 10s
-      start_period: 20s
-    networks:
-      - web
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "5"
-
-  teamcity-agent-2:
-    image: jetbrains/teamcity-agent:${TEAMCITY_VERSION}-linux-sudo
-    container_name: teamcity-agent-2
-    privileged: true
-    env_file: .env
-    volumes:
-      - ./agents/agent-2/conf:/data/teamcity_agent/conf
-    environment:
-      - DOCKER_IN_DOCKER=start
-    depends_on:
-      - redis
-    healthcheck:
-      test: curl --fail http://localhost:9090 || exit 1
-      interval: 60s
-      retries: 5
-      timeout: 10s
-      start_period: 20s
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "5"
-
-  nginx:
-    # default ports 80, 443 - expose mapping as needed to host
-    image: nginx:1.23
-    container_name: cicd-nginx
-    restart: unless-stopped
-    networks:
-      - web
+  traefik:
+    image: traefik:1.7-alpine
+    restart: on-failure
+    command:
+      - --logLevel=ERROR
+      - --docker
+      - --docker.watch=true
+      - --docker.exposedByDefault=false
+      - --docker.domain=${VIRTUAL_HOST}
+      - --defaultEntryPoints=http,https
+      - --entryPoints=Name:http Address::80 Redirect.EntryPoint:https
+      - --entryPoints=Name:https Address::443 TLS
+      - --acme=true
+      - --acme.domains=${LETSENCRYPT_HOST}
+      - --acme.email=${LETSENCRYPT_EMAIL}
+      - --acme.storage=acme.json
+      - --acme.OnHostRule=false
+      - --acme.onDemand=false
+      - --acme.entryPoint=https
+      - --acme.httpChallenge
+      - --acme.httpChallenge.entryPoint=http
     ports:
-      - "443:443"
       - "80:80"
+      - "443:443"
+    networks:
+      - web
     volumes:
-      - ${NGINX_CONF_FILE}:/etc/nginx/conf.d/default.conf
-      - ${NGINX_SSL_CERTS}:/etc/ssl
-      - ${NGINX_LOGS}:/var/log/nginx
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /opt/traefik/acme.json:/acme.json
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
 networks:
   web:
+    external: true

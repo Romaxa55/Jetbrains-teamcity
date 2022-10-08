@@ -11,19 +11,18 @@ version: '3.4'
 
 services:
   db:
-    image: postgres:latest
+    build: ./postgres
+    volumes:
+      - "pg_data:/var/lib/postgresql/data"
+      - "pg_backup:/backups"
     restart: always
-    labels:
-      - "traefik.enable=false"
     environment:
       - POSTGRES_PASSWORD=teamcity_password
       - POSTGRES_USER=teamcity_user
       - POSTGRES_DB=teamcity_db
       - PG_DATA=/var/lib/postgresql/data
-    volumes:
-      - ./buildserver_pgdata:/var/lib/postgresql/data
-    ports:
-      - 5433:5432
+    labels:
+      - "traefik.enable=false"
     logging:
       driver: json-file
       options:
@@ -37,13 +36,14 @@ services:
       - web
       - default
     ports:
-      - "8112:8111"
+        - "8111"
     volumes:
       - ./data_dir:/data/teamcity_server/datadir
       - ./teamcity-server-logs:/opt/teamcity/logs
     depends_on:
       - db
     restart: unless-stopped
+    env_file: .env
     healthcheck:
       test: curl --fail http://localhost:8111 || exit 1
       interval: 60s
@@ -62,10 +62,13 @@ services:
   teamcity-agent-1:
     image: jetbrains/teamcity-agent:${TEAMCITY_VERSION}-linux-sudo
     privileged: true
+    env_file: .env
     volumes:
       - ./agents/agent-1/conf:/data/teamcity_agent/conf
     environment:
       - DOCKER_IN_DOCKER=start
+    depends_on:
+      - redis
     healthcheck:
       test: curl --fail http://localhost:9090 || exit 1
       interval: 60s
@@ -83,10 +86,13 @@ services:
   teamcity-agent-2:
     image: jetbrains/teamcity-agent:${TEAMCITY_VERSION}-linux-sudo
     privileged: true
+    env_file: .env
     volumes:
       - ./agents/agent-2/conf:/data/teamcity_agent/conf
     environment:
       - DOCKER_IN_DOCKER=start
+    depends_on:
+      - redis
     healthcheck:
       test: curl --fail http://localhost:9090 || exit 1
       interval: 60s
@@ -139,7 +145,7 @@ services:
       - web
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /opt/traefik/acme.json:/acme.json
+      - ./traefik/acme.json:/acme.json
     logging:
       driver: json-file
       options:

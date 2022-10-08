@@ -127,4 +127,3 @@ services:
       - ${NGINX_LOGS}:/var/log/nginx
 networks:
   web:
-    external: true

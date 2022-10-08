@@ -33,7 +33,6 @@ services:
     image: jetbrains/teamcity-server:${TEAMCITY_VERSION}
     hostname: ${VIRTUAL_HOST}
     networks:
-      - web
       - default
     ports:
         - "8111"
@@ -56,7 +55,7 @@ services:
       - "traefik.enable=true"
       - "traefik.backend=server"
       - "traefik.frontend.rule=Host:${VIRTUAL_HOST}"
-      - "traefik.docker.network=web"
+      - "traefik.docker.network=teamcity_default"
       - "traefik.port=8111"
 
   teamcity-agent-1:
@@ -142,7 +141,7 @@ services:
       - "80:80"
       - "443:443"
     networks:
-      - web
+      - teamcity_default
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./traefik/acme.json:/acme.json
@@ -153,5 +152,5 @@ services:
         max-file: "5"
 
 networks:
-  web:
+  teamcity_default:
     external: true

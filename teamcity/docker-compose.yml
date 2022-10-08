@@ -3,6 +3,7 @@ version: '3'
 services:
   server:
     image: jetbrains/teamcity-server:latest
+    container_name: server
     networks:
       - web
       - default

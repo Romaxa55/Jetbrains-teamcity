@@ -7,5 +7,5 @@ variable "yandex-cloud-id" {
 }
 
 variable "yandex-folder-id" {
-  default = "default"
+  default = "b1gab4fsp67hafns9j2h"
 }

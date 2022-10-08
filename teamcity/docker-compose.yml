@@ -55,6 +55,14 @@ services:
     environment:
       TEAMCITY_SERVER_MEM_OPTS: "-Xmx512m"
 
+  redis:
+    image: redis:3.2
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
   teamcity-agent-1:
     image: jetbrains/teamcity-agent:${TEAMCITY_VERSION}-linux-sud
     container_name: teamcity-agent-1

@@ -11,7 +11,7 @@ resource "yandex_compute_instance" "workinstance" {
     
   resources {
     cores  = 4
-    memory = 10
+    memory = 12
   }
 
   boot_disk {

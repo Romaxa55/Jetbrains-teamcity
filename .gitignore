@@ -9,3 +9,6 @@
 !/nixbox/nixos-22.05-virtualbox-x86_64.box
 /cloud-terraform/.terraform/
 /cloud-terraform/.terraform.lock.hcl
+/cloud-terraform/terraform.tfstate
+/cloud-terraform/terraform.tfstate.backup
+/cloud-terraform/.terraform.tfstate.lock.info

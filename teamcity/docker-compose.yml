@@ -34,8 +34,9 @@ services:
     hostname: ${VIRTUAL_HOST}
     networks:
       - default
+      - web
     ports:
-        - "8111:8111"
+        - "8111"
     volumes:
       - ./data_dir:/data/teamcity_server/datadir
       - ./teamcity-server-logs:/opt/teamcity/logs
@@ -55,7 +56,7 @@ services:
       - "traefik.enable=true"
       - "traefik.backend=server"
       - "traefik.frontend.rule=Host:${VIRTUAL_HOST}"
-      - "traefik.docker.network=teamcity_default"
+      - "traefik.docker.network=web"
       - "traefik.port=8111"
 
   teamcity-agent-1:
@@ -124,7 +125,7 @@ services:
       - --docker
       - --docker.watch=true
       - --docker.exposedByDefault=false
-      - --docker.network=teamcity_default
+      - --docker.network=web
       - --docker.domain=${VIRTUAL_HOST}
       - --defaultEntryPoints=http,https
       - --entryPoints=Name:http Address::80 Redirect.EntryPoint:https
@@ -142,7 +143,7 @@ services:
       - "80:80"
       - "443:443"
     networks:
-      - teamcity_default
+      - web
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./traefik/acme.json:/acme.json
@@ -153,5 +154,5 @@ services:
         max-file: "5"
 
 networks:
-  teamcity_default:
+  web:
     external: true

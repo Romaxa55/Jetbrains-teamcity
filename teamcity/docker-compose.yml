@@ -35,7 +35,7 @@ services:
     networks:
       - default
     ports:
-        - "8111"
+        - "8111:8111"
     volumes:
       - ./data_dir:/data/teamcity_server/datadir
       - ./teamcity-server-logs:/opt/teamcity/logs

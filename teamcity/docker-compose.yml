@@ -33,7 +33,7 @@ services:
     depends_on:
       - redis
     volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock
+      - "/var/run/docker.sock:/var/run/docker.sock"
     labels:
       - "traefik.enable=false"
     logging:

@@ -15,12 +15,12 @@ resource "yandex_compute_instance" "gateway-a" {
 
   labels = {
     enviroment = "qa"
-    type = "gateway"
+    type       = "gateway"
   }
 
   resources {
-    cores  = 4
-    memory = 8
+    cores         = 4
+    memory        = 8
     core_fraction = 100
   }
 
@@ -28,12 +28,12 @@ resource "yandex_compute_instance" "gateway-a" {
     auto_delete = true
     initialize_params {
       image_id = "fd83869rbingor0in0ui"
-      type = "network-ssd"
+      type     = "network-ssd"
     }
   }
 
   network_interface {
-    subnet_id = "${yandex_vpc_subnet.qa-subnet-a.id}"
+    subnet_id = yandex_vpc_subnet.qa-subnet-a.id
   }
 }
 
@@ -45,12 +45,12 @@ resource "yandex_compute_instance" "gateway-b" {
 
   labels = {
     enviroment = "qa"
-    type = "gateway"
+    type       = "gateway"
   }
 
   resources {
-    cores  = 4
-    memory = 8
+    cores         = 4
+    memory        = 8
     core_fraction = 100
   }
 
@@ -58,11 +58,11 @@ resource "yandex_compute_instance" "gateway-b" {
     auto_delete = true
     initialize_params {
       image_id = "fd83869rbingor0in0ui"
-      type = "network-ssd"
+      type     = "network-ssd"
     }
   }
 
   network_interface {
-    subnet_id = "${yandex_vpc_subnet.qa-subnet-b.id}"
+    subnet_id = yandex_vpc_subnet.qa-subnet-b.id
   }
 }

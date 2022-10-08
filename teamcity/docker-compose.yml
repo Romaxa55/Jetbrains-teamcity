@@ -117,9 +117,9 @@ services:
     container_name: cicd-nginx
     restart: unless-stopped
     networks:
-      - jenkins
+      - web
     ports:
-      - "8443:443"   # https
+      - "443:443"   # https
     volumes:
       - ${JENKINS_LOCAL_HOME}:/var/jenkins_home
       - ${NGINX_CONF}:/etc/nginx/conf.d/default.conf

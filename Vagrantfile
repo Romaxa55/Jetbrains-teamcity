@@ -16,7 +16,7 @@ Vagrant.configure("2") do |config|
     echo I am provisioning... &&
     cd $HOME
     git --version
-    git clone https://github.com/Romaxa55/Jetbrains-teamcity.git
+    git clone --branch develop https://github.com/Romaxa55/Jetbrains-teamcity.git
     cd Jetbrains-teamcity/teamcity
     docker compose up -d
     SCRIPT

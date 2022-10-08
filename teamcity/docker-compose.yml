@@ -13,6 +13,8 @@ services:
   db:
     image: postgres:latest
     restart: always
+    labels:
+      - "traefik.enable=false"
     environment:
       - POSTGRES_PASSWORD=teamcity_password
       - POSTGRES_USER=teamcity_user
@@ -22,9 +24,18 @@ services:
       - ./buildserver_pgdata:/var/lib/postgresql/data
     ports:
       - 5433:5432
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
 
   teamcity:
     image: jetbrains/teamcity-server:${TEAMCITY_VERSION}
+    hostname: ${VIRTUAL_HOST}
+    networks:
+      - web
+      - default
     ports:
       - "8112:8111"
     volumes:
@@ -41,6 +52,12 @@ services:
       start_period: 20s
     environment:
       TEAMCITY_SERVER_MEM_OPTS: "-Xmx512m"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.backend=server"
+      - "traefik.frontend.rule=Host:${VIRTUAL_HOST}"
+      - "traefik.docker.network=web"
+      - "traefik.port=8111"
 
   teamcity-agent-1:
     image: jetbrains/teamcity-agent:${TEAMCITY_VERSION}-linux-sudo
@@ -49,6 +66,20 @@ services:
       - ./agents/agent-1/conf:/data/teamcity_agent/conf
     environment:
       - DOCKER_IN_DOCKER=start
+    healthcheck:
+      test: curl --fail http://localhost:9090 || exit 1
+      interval: 60s
+      retries: 5
+      timeout: 10s
+      start_period: 20s
+    labels:
+      - "traefik.enable=false"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
   teamcity-agent-2:
     image: jetbrains/teamcity-agent:${TEAMCITY_VERSION}-linux-sudo
     privileged: true
@@ -56,3 +87,65 @@ services:
       - ./agents/agent-2/conf:/data/teamcity_agent/conf
     environment:
       - DOCKER_IN_DOCKER=start
+    healthcheck:
+      test: curl --fail http://localhost:9090 || exit 1
+      interval: 60s
+      retries: 5
+      timeout: 10s
+      start_period: 20s
+    labels:
+      - "traefik.enable=false"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  redis:
+    image: redis:3.2
+    labels:
+      - "traefik.enable=false"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  traefik:
+    image: traefik:1.7-alpine
+    restart: on-failure
+    command:
+      - --logLevel=ERROR
+      - --docker
+      - --docker.watch=true
+      - --docker.exposedByDefault=false
+      - --docker.domain=${VIRTUAL_HOST}
+      - --defaultEntryPoints=http,https
+      - --entryPoints=Name:http Address::80 Redirect.EntryPoint:https
+      - --entryPoints=Name:https Address::443 TLS
+      - --acme=true
+      - --acme.domains=${LETSENCRYPT_HOST}
+      - --acme.email=${LETSENCRYPT_EMAIL}
+      - --acme.storage=acme.json
+      - --acme.OnHostRule=false
+      - --acme.onDemand=false
+      - --acme.entryPoint=https
+      - --acme.httpChallenge
+      - --acme.httpChallenge.entryPoint=http
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - web
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /opt/traefik/acme.json:/acme.json
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+networks:
+  web:
+    external: true

@@ -29,4 +29,17 @@ resource "yandex_compute_instance" "workinstance" {
   metadata = {
     ssh-keys = "${var.user}:${file(var.sshkey)}"
     }
+
+   connection {
+    type        = "ssh"
+    user        = "ubuntu"
+    private_key = "${file(var.ssprivatehkey)}"
+    host        = self.network_interface.0.nat_ip_address
+  }
+  provisioner "remote-exec" {
+    inline = [
+	  "sudo apt-get update",
+      "sudo apt-get install docker.io docker-compose git -y"
+    ]
+  }
 }

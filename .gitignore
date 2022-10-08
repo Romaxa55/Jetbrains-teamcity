@@ -12,3 +12,4 @@
 /cloud-terraform/terraform.tfstate
 /cloud-terraform/terraform.tfstate.backup
 /cloud-terraform/.terraform.tfstate.lock.info
+/cloud-terraform/key.json

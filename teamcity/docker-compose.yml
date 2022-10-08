@@ -8,8 +8,8 @@ services:
       - web
       - default
     volumes:
-      - ./data:/data/teamcity_server/datadir
-      - ./logs:/opt/teamcity/logs
+      - ./data:/data/teamcity_server/datadir:rw
+      - ./logs:/opt/teamcity/logs:rw
     hostname: ${VIRTUAL_HOST}
     ports:
       - "8111"

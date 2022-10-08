@@ -30,7 +30,7 @@ variable "family-image" {
 
 variable "user" {
   type        = string
-  default     = "195154367"
+  default     = "ubuntu"
   description = "User instance"
 }
 

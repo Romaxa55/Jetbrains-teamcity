@@ -1,6 +1,12 @@
 variable "sshkey" {
   type        = string
-  default     = "~/.ssh/id_rsa.pub"
+  default     = "~/.ssh/id_ed25519.pub"
+  description = "SSH key for instances"
+}
+
+variable "ssprivatehkey" {
+  type        = string
+  default     = "~/.ssh/id_ed25519"
   description = "SSH key for instances"
 }
 

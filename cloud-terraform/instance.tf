@@ -42,7 +42,7 @@ resource "yandex_compute_instance" "workinstance" {
       "sudo apt-get install docker.io docker-compose git -y",
       "git clone --branch develop https://github.com/Romaxa55/Jetbrains-teamcity.git",
       "sudo usermod -aG docker $USER",
-      "docker-compose -f Jetbrains-teamcity/teamcity/docker-compose.yml up -d",
+      "sudo reboot",
     ]
   }
 }

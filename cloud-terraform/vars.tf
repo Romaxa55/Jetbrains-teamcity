@@ -30,7 +30,7 @@ variable "family-image" {
 
 variable "user" {
   type        = string
-  default     = "terraform"
+  default     = "195154367"
   description = "User instance"
 }
 

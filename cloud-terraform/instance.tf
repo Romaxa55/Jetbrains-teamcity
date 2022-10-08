@@ -23,13 +23,10 @@ resource "yandex_compute_instance" "workinstance" {
 
   network_interface {
     subnet_id       = "${yandex_vpc_subnet.apps-subnet.id}"
-#    ip_address      = var.int-static
-#    nat_ip_address  = var.ext-static
     nat             = true
   }
 
   metadata = {
     ssh-keys = "${var.user}:${file(var.sshkey)}"
-#    ssh-keys = var.sshkey
     }
 }

@@ -1,6 +1,5 @@
 variable "sshkey" {
   type        = string
-#  default     = ""
   default     = "~/.ssh/id_rsa.pub"
   description = "SSH key for instances"
 }
@@ -31,7 +30,7 @@ variable "family-image" {
 
 variable "user" {
   type        = string
-  default     = "ubuntu"
+  default     = "terraform"
   description = "User instance"
 }
 

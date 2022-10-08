@@ -3,9 +3,9 @@ variable "zone" {
 }
 
 variable "yandex-cloud-id" {
-  default = "<cloud_id>"
+  default = "b1g4nlnq9br985vecmfc"
 }
 
 variable "yandex-folder-id" {
-  default = "folder_id"
+  default = "default"
 }

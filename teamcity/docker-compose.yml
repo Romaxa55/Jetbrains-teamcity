@@ -5,7 +5,7 @@ services:
     image: jetbrains/teamcity-server:latest
     container_name: server
     networks:
-      - web
+      - wagentseb
       - default
     volumes:
       - ./data:/data/teamcity_server/datadir:rw
@@ -28,20 +28,25 @@ services:
         max-size: "10m"
         max-file: "5"
 
-  agent:
-    build: ./agents/python-node-yarn
-    env_file: .env
-    depends_on:
-      - redis
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
+  teamcity-agent-1:
+    image: jetbrains/teamcity-agent:${TEAMCITY_VERSION}-linux-sudo
+    privileged: true
     labels:
       - "traefik.enable=false"
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "5"
+    volumes:
+      - ./agents/agent-1/conf:/data/teamcity_agent/conf
+    environment:
+      - DOCKER_IN_DOCKER=start
+
+  teamcity-agent-2:
+    image: jetbrains/teamcity-agent:${TEAMCITY_VERSION}-linux-sudo
+    privileged: true
+    labels:
+      - "traefik.enable=false"
+    volumes:
+      - ./agents/agent-2/conf:/data/teamcity_agent/conf
+    environment:
+      - DOCKER_IN_DOCKER=start
 
   postgres:
     image: postgres:latest

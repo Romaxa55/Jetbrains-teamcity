@@ -53,11 +53,6 @@ services:
       - "5432"
     labels:
       - "traefik.enable=false"
-    logging:
-      driver: json-file
-      options:
-        max-size: "10m"
-        max-file: "5"
 
   redis:
     image: redis:3.2

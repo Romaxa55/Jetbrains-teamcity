@@ -2,7 +2,7 @@ version: '3'
 
 services:
   server:
-    image: jetbrains/teamcity-server:${TEAMCITY_VERSION}
+    image: jetbrains/teamcity-server:latest
     container_name: server
     networks:
       - web
@@ -28,29 +28,23 @@ services:
         max-size: "10m"
         max-file: "5"
 
-  teamcity-agent-1:
+  agent:
     image: jetbrains/teamcity-agent:${TEAMCITY_VERSION}-linux-sudo
     privileged: true
-    labels:
-      - "traefik.enable=false"
-    volumes:
-      - ./agents/agent-1/conf:/data/teamcity_agent/conf
     environment:
       - DOCKER_IN_DOCKER=start
+    env_file: .env
     depends_on:
       - redis
-
-  teamcity-agent-2:
-    image: jetbrains/teamcity-agent:${TEAMCITY_VERSION}-linux-sudo
-    privileged: true
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
     labels:
       - "traefik.enable=false"
-    volumes:
-      - ./agents/agent-2/conf:/data/teamcity_agent/conf
-    environment:
-      - DOCKER_IN_DOCKER=start
-    depends_on:
-      - redis
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
 
   postgres:
     image: postgres:latest

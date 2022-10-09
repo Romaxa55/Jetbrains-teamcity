@@ -12,7 +12,7 @@ services:
       - ./logs:/opt/teamcity/logs
     hostname: ${VIRTUAL_HOST}
     ports:
-      - "8111"
+      - "8111:8111"
     depends_on:
       - postgres
     env_file: .env
@@ -75,13 +75,13 @@ services:
       - --docker
       - --docker.watch=true
       - --docker.exposedByDefault=false
-      - --docker.domain=${VIRTUAL_HOST}
+      - --docker.domain=127.0.0.1
       - --defaultEntryPoints=http,https
       - --entryPoints=Name:http Address::80 Redirect.EntryPoint:https
       - --entryPoints=Name:https Address::443 TLS
       - --acme=true
-      - --acme.domains=${LETSENCRYPT_HOST}
-      - --acme.email=${LETSENCRYPT_EMAIL}
+      - --acme.domains=127.0.0.1
+      - --acme.email=admoin@127.0.0.1
       - --acme.storage=acme.json
       - --acme.OnHostRule=false
       - --acme.onDemand=false

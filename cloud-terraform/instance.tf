@@ -40,9 +40,9 @@ resource "yandex_compute_instance" "workinstance" {
     inline = [
 	  "sudo apt-get update",
       "sudo apt-get install docker.io docker-compose git -y",
-      "git clone --branch develop https://github.com/Romaxa55/Jetbrains-teamcity.git",
-      "sudo usermod -a -G docker ubuntu",
-      "newgrp docker",
+      "git clone --branch develop https://github.com/Romaxa55/Jetbrains-teamcity.git &",
+      "sudo usermod -a -G docker ubuntu &",
+      "newgrp docker &",
       "docker network create web",
       "exit 0",
     ]

@@ -18,7 +18,7 @@ Vagrant.configure("2") do |config|
     git --version
     git clone --branch develop https://github.com/Romaxa55/Jetbrains-teamcity.git
     cd Jetbrains-teamcity/teamcity
-    docker compose up -d
+    docker compose up -d --build
     SCRIPT
   config.vm.provision "shell", inline: $script   #VirtualBox
     config.vm.provider :virtualbox do |vb|

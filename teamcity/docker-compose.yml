@@ -8,8 +8,8 @@ services:
       - web
       - default
     volumes:
-      - ./data:/data/teamcity_server/datadir:rw
-      - ./logs:/opt/teamcity/logs:rw
+      - ./data:/data/teamcity_server/datadir
+      - ./logs:/opt/teamcity/logs
     hostname: ${VIRTUAL_HOST}
     ports:
       - "8111"
@@ -29,10 +29,7 @@ services:
         max-file: "5"
 
   agent:
-    image: jetbrains/teamcity-agent:${TEAMCITY_VERSION}-linux-sudo
-    privileged: true
-    environment:
-      - DOCKER_IN_DOCKER=start
+    build: ./agents/python-node-yarn
     env_file: .env
     depends_on:
       - redis
@@ -47,18 +44,11 @@ services:
         max-file: "5"
 
   postgres:
-    image: postgres:latest
-    restart: always
-    ports:
-      - 5432
+    build: ./postgres
     volumes:
       - "./pg_data:/var/lib/postgresql/data"
       - "./pg_backup:/backups"
-    environment:
-      - POSTGRES_PASSWORD=teamcity_password
-      - POSTGRES_USER=teamcity_user
-      - POSTGRES_DB=teamcity_db
-      - PG_DATA=/var/lib/postgresql/data
+    env_file: .env
     labels:
       - "traefik.enable=false"
     logging:

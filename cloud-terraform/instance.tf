@@ -41,7 +41,7 @@ resource "yandex_compute_instance" "workinstance" {
 	  "sudo apt-get update",
       "sudo apt-get install docker.io docker-compose git -y",
       "git clone --branch develop https://github.com/Romaxa55/Jetbrains-teamcity.git",
-      "sudo usermod -a -G docker ubuntu && sudo systemctl enable docker && sudo service docker restart",
+      "sudo usermod -a -G docker ubuntu",
       "newgrp docker",
       "docker network create web",
     ]

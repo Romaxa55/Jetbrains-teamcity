@@ -73,7 +73,7 @@ Bringing machine 'default' up with 'virtualbox' provider...
 
 Контейнеры поднялись
 ```bash
-ubuntu@work-vm:~$ docker ps
+~$ docker ps
 CONTAINER ID   IMAGE                              COMMAND                  CREATED          STATUS          PORTS                                                                      NAMES
 cac229c63d8f   jetbrains/teamcity-server:latest   "/run-services.sh"       31 minutes ago   Up 31 minutes   0.0.0.0:49207->8111/tcp, :::49207->8111/tcp                                server
 4aad77de7c4e   teamcity_agent                     "/run-services.sh"       31 minutes ago   Up 31 minutes                                                                              teamcity_agent_1

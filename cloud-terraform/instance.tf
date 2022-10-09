@@ -44,6 +44,7 @@ resource "yandex_compute_instance" "workinstance" {
       "sudo usermod -a -G docker ubuntu",
       "newgrp docker",
       "docker network create web",
+      "exit 0",
     ]
   }
 }

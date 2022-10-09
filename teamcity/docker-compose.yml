@@ -5,7 +5,7 @@ services:
     image: jetbrains/teamcity-server:latest
     container_name: server
     networks:
-      - wagentseb
+      - web
       - default
     volumes:
       - ./data:/data/teamcity_server/datadir:rw

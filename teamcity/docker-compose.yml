@@ -37,6 +37,8 @@ services:
       - ./agents/agent-1/conf:/data/teamcity_agent/conf
     environment:
       - DOCKER_IN_DOCKER=start
+    depends_on:
+      - redis
 
   teamcity-agent-2:
     image: jetbrains/teamcity-agent:${TEAMCITY_VERSION}-linux-sudo
@@ -47,6 +49,8 @@ services:
       - ./agents/agent-2/conf:/data/teamcity_agent/conf
     environment:
       - DOCKER_IN_DOCKER=start
+    depends_on:
+      - redis
 
   postgres:
     image: postgres:latest

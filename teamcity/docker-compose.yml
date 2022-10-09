@@ -49,10 +49,16 @@ services:
   postgres:
     image: postgres:latest
     restart: always
+    ports:
+      - 5432
     volumes:
       - "./pg_data:/var/lib/postgresql/data"
       - "./pg_backup:/backups"
-    env_file: .env
+    environment:
+      - POSTGRES_PASSWORD=teamcity_password
+      - POSTGRES_USER=teamcity_user
+      - POSTGRES_DB=teamcity_db
+      - PG_DATA=/var/lib/postgresql/data
     labels:
       - "traefik.enable=false"
     logging:

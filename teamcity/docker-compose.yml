@@ -2,7 +2,7 @@ version: '3'
 
 services:
   server:
-    image: jetbrains/teamcity-server:latest
+    image: jetbrains/teamcity-server:${TEAMCITY_VERSION}
     container_name: server
     networks:
       - web

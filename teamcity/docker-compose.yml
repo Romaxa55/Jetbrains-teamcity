@@ -45,15 +45,20 @@ services:
 
   postgres:
     image: postgres
+    ports:
+      - "5432"
     restart: always
     volumes:
       - "./pg_data:/var/lib/postgresql/data"
       - "./pg_backup:/backups"
     env_file: .env
-    ports:
-      - "5432"
     labels:
       - "traefik.enable=false"
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
 
   redis:
     image: redis:3.2
@@ -73,13 +78,13 @@ services:
       - --docker
       - --docker.watch=true
       - --docker.exposedByDefault=false
-      - --docker.domain=127.0.0.1
+      - --docker.domain=${VIRTUAL_HOST}
       - --defaultEntryPoints=http,https
       - --entryPoints=Name:http Address::80 Redirect.EntryPoint:https
       - --entryPoints=Name:https Address::443 TLS
       - --acme=true
-      - --acme.domains=127.0.0.1
-      - --acme.email=admoin@127.0.0.1
+      - --acme.domains=${LETSENCRYPT_HOST}
+      - --acme.email=${LETSENCRYPT_EMAIL}
       - --acme.storage=acme.json
       - --acme.OnHostRule=false
       - --acme.onDemand=false

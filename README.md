@@ -111,9 +111,14 @@ Bringing machine 'default' up with 'virtualbox' provider...
     default: c39aa91943e9 Pulling fs layer
  ...
 ```
-#ToDo Тут будут скрины, по факту проще всего дернуть конфиг из https://github.com/egregors/teamcity-docker-compose уже с настроенным ssl +  redis + traefik вместа nxinx... 
 
-P.S. Это на тот случай, если VirtualBox работает не стабильно и валится с ошибкой
-```bash
-sudo "/Library/Application Support/VirtualBox/LaunchDaemons/VirtualBoxStartup.sh" restart
-```
+![Alt text](img/img1.png?raw=true "Teamcity")
+
+![Alt text](img/img2.png?raw=true "Teamcity")
+
+![Alt text](img/img3.png?raw=true "Teamcity")
+
+
+[//]: # (sudo "/Library/Application Support/VirtualBox/LaunchDaemons/VirtualBoxStartup.sh" restart)
+
+

@@ -71,6 +71,17 @@ Bringing machine 'default' up with 'virtualbox' provider...
  ...
 ```
 
+Контейнеры поднялись
+```bash
+ubuntu@work-vm:~$ docker ps
+CONTAINER ID   IMAGE                              COMMAND                  CREATED          STATUS          PORTS                                                                      NAMES
+cac229c63d8f   jetbrains/teamcity-server:latest   "/run-services.sh"       31 minutes ago   Up 31 minutes   0.0.0.0:49207->8111/tcp, :::49207->8111/tcp                                server
+4aad77de7c4e   teamcity_agent                     "/run-services.sh"       31 minutes ago   Up 31 minutes                                                                              teamcity_agent_1
+60fa6ee80d73   redis:3.2                          "docker-entrypoint.s…"   31 minutes ago   Up 31 minutes   6379/tcp                                                                   teamcity_redis_1
+a53b2b6897c0   traefik:1.7-alpine                 "/entrypoint.sh --lo…"   31 minutes ago   Up 31 minutes   0.0.0.0:80->80/tcp, :::80->80/tcp, 0.0.0.0:443->443/tcp, :::443->443/tcp   teamcity_traefik_1
+0fe03ff0f9b9   postgres                           "docker-entrypoint.s…"   31 minutes ago   Up 31 minutes   0.0.0.0:49205->5432/tcp, :::49205->5432/tcp                                teamcity_postgres_1
+```
+
 ![Alt text](img/img1.png?raw=true "Teamcity")
 
 ![Alt text](img/img2.png?raw=true "Teamcity")
